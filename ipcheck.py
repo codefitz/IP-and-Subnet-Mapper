@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright 2009 Wes Moskal-Fitzpatrick
+# Copyright 2019 Wes Moskal-Fitzpatrick
 # Licensed under Apache Version 2.0
 
 import ipaddress
