@@ -96,5 +96,9 @@ IP Address 192.168.1.210 NOT in 192.168.1.0/32 ( Inputted Address: 192.168.1.210
 
 ```console
 $ python3 ipcheck.py -i 192.168.1.208/30 -s 192.168.1.210
-
+IP Address 192.168.1.208 NOT in 192.168.1.210/32 ( Inputted Address: 192.168.1.208/30 Inputted Subnet: 192.168.1.210 )
+IP Address 192.168.1.209 NOT in 192.168.1.210/32 ( Inputted Address: 192.168.1.208/30 Inputted Subnet: 192.168.1.210 )
+IP Address 192.168.1.210 found in 192.168.1.210/32 ( Inputted Address: 192.168.1.208/30 Inputted Subnet: 192.168.1.210 )
+IP Address 192.168.1.211 NOT in 192.168.1.210/32 ( Inputted Address: 192.168.1.208/30 Inputted Subnet: 192.168.1.210 )
+4 IP addresses processed.
 ```
