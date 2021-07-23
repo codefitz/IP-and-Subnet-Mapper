@@ -13,7 +13,7 @@ Check for an IP address within a given Subnet.
 
 ### Help
 
-```shell
+```console
 $ python3 ipcheck.py -h
 usage: ipcheck.py [-h] [-s <subnet>] [-S <filename>] [-i <ip address>] [-I <filename>] [-o <filename>]
 
@@ -43,7 +43,7 @@ optional arguments:
 
 ### Check a Single IP against a Single Subnet
 
-```shell
+```console
 $ python3 ipcheck.py -i 192.168.1.210 -s 192.168.1.0/24
 IP Address 192.168.1.210 found in 192.168.1.0/24 ( Inputted Address: 192.168.1.210 Inputted Subnet: 192.168.1.0/24 )
 1 IP addresses processed.
