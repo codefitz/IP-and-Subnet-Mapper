@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright 2019 Wes Moskal-Fitzpatrick
+# Copyright 2019-2021 Wes Moskal-Fitzpatrick
 # Licensed under Apache Version 2.0
 
 import ipaddress
@@ -81,10 +81,10 @@ def validate_subnet(subnet):
 def output(ip,ip_name,valid_subnet,subnet,sub_name):
     if valid_subnet:
         if ip in valid_subnet:
-            values = [str(ip),ip_name,str(valid_subnet),sub_name,ip_addr,subnet]
+            values = [str(ip),ip_name,str(valid_subnet),sub_name,True,ip_addr,subnet]
             msg = ("IP Address",values[0],"found in",values[2],"( Inputted Address:",values[4],"Inputted Subnet:",values[5],")")
         else:
-            values = [str(ip),ip_name,str(valid_subnet),sub_name,ip_addr,subnet]
+            values = [str(ip),ip_name,str(valid_subnet),sub_name,False,ip_addr,subnet]
             msg = ("IP Address",values[0],"NOT in",values[2],"( Inputted Address:",values[4],"Inputted Subnet:",values[5],")")
         if output_file:
             mapped.append(values)
@@ -116,7 +116,7 @@ mapped = []
 
 if ip_addr:
     mapped = checkIPs(ip_addr)
-    mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "Inputted Address", "Inputted Subnet" ])
+    mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "In Subnet", "Inputted Address", "Inputted Subnet" ])
 elif ip_file:
     with open(ip_file) as file:
         reader = csv.reader(file)
@@ -125,7 +125,7 @@ elif ip_file:
             ip_addr = line[0]
             ip_name = line[1]
             mapped = checkIPs(ip_addr,ip_name)
-        mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "Inputted Address", "Inputted Subnet" ])
+        mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "In Subnet", "Inputted Address", "Inputted Subnet" ])
 
 print (len(mapped)-1,"IP addresses processed.\n")
 
