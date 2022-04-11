@@ -82,10 +82,10 @@ def output(ip,ip_name,valid_subnet,subnet,sub_name):
     if valid_subnet:
         if ip in valid_subnet:
             values = [str(ip),ip_name,str(valid_subnet),sub_name,True,ip_addr,subnet]
-            msg = ("IP Address",values[0],"found in",values[2],"( Inputted Address:",values[4],"Inputted Subnet:",values[5],")")
+            msg = ("IP Address",values[0],"found in",values[2],"( Inputted Address:",values[5],"Inputted Subnet:",values[6],")")
         else:
             values = [str(ip),ip_name,str(valid_subnet),sub_name,False,ip_addr,subnet]
-            msg = ("IP Address",values[0],"NOT in",values[2],"( Inputted Address:",values[4],"Inputted Subnet:",values[5],")")
+            msg = ("IP Address",values[0],"NOT in",values[2],"( Inputted Address:",values[5],"Inputted Subnet:",values[6],")")
         if output_file:
             mapped.append(values)
         else:
