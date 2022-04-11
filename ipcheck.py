@@ -89,7 +89,7 @@ def output(ip,ip_name,valid_subnet,subnet,sub_name):
         if output_file:
             mapped.append(values)
         else:
-            print(" ".join(msg))
+            print(' '.join(str(s) for s in msg))
             mapped.append(values)
     return mapped
 
