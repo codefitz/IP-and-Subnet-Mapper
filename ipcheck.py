@@ -72,8 +72,12 @@ def validate_subnet(subnet):
                 except:
                     try:
                         cidrip = cidrize(subnet)
-                        subbed = ipaddress.ip_network(cidrip)
-                        return subbed
+                        if cidrip:
+                            for cidr in cidrip:
+                                subbed = ipaddress.ip_network(str(cidr))
+                                return subbed
+                        else:
+                            raise ValueError('cidrize returned no results')
                     except:
                         msg = 'Subnet %s is not valid CIDR syntax, cannot process!' % (subnet)
                         print(msg)
