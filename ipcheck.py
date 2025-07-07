@@ -22,6 +22,10 @@ subnets_file = args.subnets_file
 ip_addr = args.ip_address
 ip_file = args.ip_file
 output_file = args.output_file
+subnets_list = []
+if subnets_file:
+    with open(subnets_file) as file:
+        subnets_list = list(csv.reader(file))
 
 def range_to_ips(iprange):
     list_of_ips = []
@@ -93,29 +97,27 @@ def output(ip,ip_name,valid_subnet,subnet,sub_name):
             mapped.append(values)
     return mapped
 
-def checkIPs(ip_addr,ip_name=None):
+def checkIPs(ip_addr, ip_name=None, subnets=None):
     count = 0
     ip_list = range_to_ips(ip_addr)
     for ip in ip_list:
         count += 1
         if subnet:
             validated = validate_subnet(subnet)
-            mapped = output(ip,ip_name,validated,subnet,None)
-        elif subnets_file:
-            with open(subnets_file) as file:
-                reader = csv.reader(file)
-                for line in reader:
-                    subnet_ip = line[0]
-                    sub_name = line[1]
-                    validated = validate_subnet(subnet_ip)
-                    mapped = output(ip,ip_name,validated,subnet_ip,sub_name)
+            mapped = output(ip, ip_name, validated, subnet, None)
+        elif subnets:
+            for line in subnets:
+                subnet_ip = line[0]
+                sub_name = line[1] if len(line) > 1 else None
+                validated = validate_subnet(subnet_ip)
+                mapped = output(ip, ip_name, validated, subnet_ip, sub_name)
     mapped.sort( key = lambda k: ipaddress.ip_address(k[0]) )
     return mapped
 
 mapped = []
 
 if ip_addr:
-    mapped = checkIPs(ip_addr)
+    mapped = checkIPs(ip_addr, subnets=subnets_list)
     mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "In Subnet", "Inputted Address", "Inputted Subnet" ])
 elif ip_file:
     with open(ip_file) as file:
@@ -124,7 +126,7 @@ elif ip_file:
         for line in reader:
             ip_addr = line[0]
             ip_name = line[1]
-            mapped = checkIPs(ip_addr,ip_name)
+            mapped = checkIPs(ip_addr, ip_name, subnets=subnets_list)
         mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "In Subnet", "Inputted Address", "Inputted Subnet" ])
 
 print (len(mapped)-1,"IP addresses processed.\n")
