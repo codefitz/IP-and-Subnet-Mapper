@@ -2,6 +2,14 @@
 
 Check for an IP address within a given Subnet.
 
+## Installation
+
+This project requires Python 3. Install the Python dependencies using pip:
+
+```console
+$ pip install -r requirements.txt
+```
+
 ## Input Files
 
 | Flag | File | Format | Column 1 | Column 2 |
