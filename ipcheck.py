@@ -91,14 +91,14 @@ def validate_subnet(subnet):
                         msg = 'Subnet %s is not valid CIDR syntax, cannot process!' % (subnet)
                         print(msg)
 
-def output(ip,ip_name,valid_subnet,subnet,sub_name):
+def output(mapped, ip, ip_name, valid_subnet, subnet, sub_name):
     if valid_subnet:
         if ip in valid_subnet:
-            values = [str(ip),ip_name,str(valid_subnet),sub_name,True,ip_addr,subnet]
-            msg = ("IP Address",values[0],"found in",values[2],"( Inputted Address:",values[5],"Inputted Subnet:",values[6],")")
+            values = [str(ip), ip_name, str(valid_subnet), sub_name, True, ip_addr, subnet]
+            msg = ("IP Address", values[0], "found in", values[2], "( Inputted Address:", values[5], "Inputted Subnet:", values[6], ")")
         else:
-            values = [str(ip),ip_name,str(valid_subnet),sub_name,False,ip_addr,subnet]
-            msg = ("IP Address",values[0],"NOT in",values[2],"( Inputted Address:",values[5],"Inputted Subnet:",values[6],")")
+            values = [str(ip), ip_name, str(valid_subnet), sub_name, False, ip_addr, subnet]
+            msg = ("IP Address", values[0], "NOT in", values[2], "( Inputted Address:", values[5], "Inputted Subnet:", values[6], ")")
         if output_file:
             mapped.append(values)
         else:
@@ -106,45 +106,65 @@ def output(ip,ip_name,valid_subnet,subnet,sub_name):
             mapped.append(values)
     return mapped
 
-def checkIPs(ip_addr, ip_name=None, subnets=None):
+def checkIPs(ip_addr, mapped, ip_name=None):
     count = 0
     ip_list = range_to_ips(ip_addr)
     for ip in ip_list:
         count += 1
         if subnet:
             validated = validate_subnet(subnet)
-            mapped = output(ip, ip_name, validated, subnet, None)
-        elif subnets:
-            for line in subnets:
-                subnet_ip = line[0]
-                sub_name = line[1] if len(line) > 1 else None
-                validated = validate_subnet(subnet_ip)
-                mapped = output(ip, ip_name, validated, subnet_ip, sub_name)
-    mapped.sort( key = lambda k: ipaddress.ip_address(k[0]) )
+            mapped = output(mapped, ip, ip_name, validated, subnet, None)
+        elif subnets_file:
+            with open(subnets_file) as file:
+                reader = csv.reader(file)
+                for line in reader:
+                    subnet_ip = line[0]
+                    sub_name = line[1]
+                    validated = validate_subnet(subnet_ip)
+                    mapped = output(mapped, ip, ip_name, validated, subnet_ip, sub_name)
+    mapped.sort(key=lambda k: ipaddress.ip_address(k[0]))
     return mapped
 
-mapped = []
+def main():
+    mapped = []
 
-if ip_addr:
-    mapped = checkIPs(ip_addr, subnets=subnets_list)
-    mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "In Subnet", "Inputted Address", "Inputted Subnet" ])
-elif ip_file:
-    with open(ip_file) as file:
-        reader = csv.reader(file)
-        count = 0
-        for line in reader:
-            ip_addr = line[0]
-            ip_name = line[1]
-            mapped = checkIPs(ip_addr, ip_name, subnets=subnets_list)
-        mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "In Subnet", "Inputted Address", "Inputted Subnet" ])
+    if ip_addr:
+        mapped = checkIPs(ip_addr, mapped)
+        mapped.insert(0, [
+            "IP Address",
+            "IP Name",
+            "Subnet",
+            "Subnet Name",
+            "In Subnet",
+            "Inputted Address",
+            "Inputted Subnet",
+        ])
+    elif ip_file:
+        with open(ip_file) as file:
+            reader = csv.reader(file)
+            count = 0
+            for line in reader:
+                ip_item = line[0]
+                ip_name = line[1]
+                mapped = checkIPs(ip_item, mapped, ip_name)
+        mapped.insert(0, [
+            "IP Address",
+            "IP Name",
+            "Subnet",
+            "Subnet Name",
+            "In Subnet",
+            "Inputted Address",
+            "Inputted Subnet",
+        ])
 
-processed_count = len(mapped) - 1
-if processed_count < 0:
-    processed_count = 0
-print (processed_count,"IP addresses processed.\n")
+    print(len(mapped) - 1, "IP addresses processed.\n")
 
-if output_file:
-    with open(output_file, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(mapped)
-    print("Results saved to",output_file,"\n")
+    if output_file:
+        with open(output_file, "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(mapped)
+        print("Results saved to", output_file, "\n")
+
+
+if __name__ == "__main__":
+    main()
