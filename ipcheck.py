@@ -8,6 +8,7 @@ import csv
 import argparse
 from argparse import RawTextHelpFormatter
 from cidrize import cidrize
+import sys
 
 parser = argparse.ArgumentParser(description='IP Subnet Checker',formatter_class=RawTextHelpFormatter)
 parser.add_argument('-s', '--subnet', dest='subnet',  type=str, required=False, help='A subnet to check against.\n\n', metavar='<subnet>')
@@ -22,6 +23,14 @@ subnets_file = args.subnets_file
 ip_addr = args.ip_address
 ip_file = args.ip_file
 output_file = args.output_file
+subnets_list = []
+if subnets_file:
+    with open(subnets_file) as file:
+        subnets_list = list(csv.reader(file))
+
+if not ip_addr and not ip_file:
+    parser.print_help()
+    sys.exit(1)
 
 def range_to_ips(iprange):
     list_of_ips = []
@@ -72,8 +81,12 @@ def validate_subnet(subnet):
                 except:
                     try:
                         cidrip = cidrize(subnet)
-                        subbed = ipaddress.ip_network(cidrip)
-                        return subbed
+                        if cidrip:
+                            for cidr in cidrip:
+                                subbed = ipaddress.ip_network(str(cidr))
+                                return subbed
+                        else:
+                            raise ValueError('cidrize returned no results')
                     except:
                         msg = 'Subnet %s is not valid CIDR syntax, cannot process!' % (subnet)
                         print(msg)
