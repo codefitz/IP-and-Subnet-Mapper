@@ -8,6 +8,7 @@ import csv
 import argparse
 from argparse import RawTextHelpFormatter
 from cidrize import cidrize
+import sys
 
 parser = argparse.ArgumentParser(description='IP Subnet Checker',formatter_class=RawTextHelpFormatter)
 parser.add_argument('-s', '--subnet', dest='subnet',  type=str, required=False, help='A subnet to check against.\n\n', metavar='<subnet>')
@@ -22,6 +23,10 @@ subnets_file = args.subnets_file
 ip_addr = args.ip_address
 ip_file = args.ip_file
 output_file = args.output_file
+
+if not ip_addr and not ip_file:
+    parser.print_help()
+    sys.exit(1)
 
 def range_to_ips(iprange):
     list_of_ips = []
@@ -127,7 +132,10 @@ elif ip_file:
             mapped = checkIPs(ip_addr,ip_name)
         mapped.insert(0, [ "IP Address", "IP Name", "Subnet", "Subnet Name", "In Subnet", "Inputted Address", "Inputted Subnet" ])
 
-print (len(mapped)-1,"IP addresses processed.\n")
+processed_count = len(mapped) - 1
+if processed_count < 0:
+    processed_count = 0
+print (processed_count,"IP addresses processed.\n")
 
 if output_file:
     with open(output_file, 'w', newline='') as file:
