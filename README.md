@@ -110,3 +110,14 @@ IP Address 192.168.1.210 found in 192.168.1.210/32 ( Inputted Address: 192.168.1
 IP Address 192.168.1.211 NOT in 192.168.1.210/32 ( Inputted Address: 192.168.1.208/30 Inputted Subnet: 192.168.1.210 )
 4 IP addresses processed.
 ```
+## Running Tests
+
+Install dependencies (requires `pip`) and run the test suite with `pytest`:
+
+```console
+$ pip install -r requirements.txt  # if needed
+$ pytest
+```
+
+The tests verify single IP checks, IP ranges, and handling of invalid input.
+
